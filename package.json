@@ -2,14 +2,18 @@
   "name": "long-task-detector",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "types": "./lib/index.d.ts",
   "author": "",
   "license": "ISC",
   "dependencies": {
     "async-hook": "^1.6.2",
     "v8-profiler": "^5.6.5"
+  },
+  "devDependencies": {
+    "@types/v8-profiler": "0.0.5"
   }
 }
