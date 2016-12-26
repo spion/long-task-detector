@@ -107,7 +107,6 @@ export function createDetector(notifyMe: (report:Report) => void, maxDelta: numb
 }
 
 function stringifyWarning() {
-  console.log(this)
   var initial = "WARNING: Task took " + this.taskLength + "ms to run!"
   function stringStack(stackItems: StackItem[]) {
     return stackItems.map(item => `  at ${item.name || '?'} (${item.url}:${item.line})`)
