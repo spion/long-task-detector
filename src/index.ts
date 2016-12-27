@@ -20,6 +20,7 @@ export interface StackItem {
 export function createDetector(notifyMe: (report:Report) => void, maxDelta: number) {
   var t = Date.now();
   var lastStart:number = null;
+  var timeout:NodeJS.Timer = null;
   var prof = null;
   var n = 0;
   var stuck;
@@ -51,16 +52,18 @@ export function createDetector(notifyMe: (report:Report) => void, maxDelta: numb
   asyncHook.addHooks({pre:pre, post:post})
   asyncHook.enable()
   var currentProfile = null
-  function reProfile() {
+  function resetProfiler() {
     if (lastStart) {
       prof = profiler.stopProfiling('long-task-detector')
       prof.delete()
     }
-    lastStart = Date.now()
-    profiler.startProfiling('long-task-detector')
-    if (working) setTimeout(reProfile, 3000)
+    if (working) {
+      lastStart = Date.now()
+      profiler.startProfiling('long-task-detector')
+      timeout = setTimeout(resetProfiler, 3000)
+    }
   }
-  reProfile()
+  resetProfiler()
 
   function analyse(profile: any, start: number, end:number): ReportItem[] {
     var nodeDictionary = Object.create(null)
@@ -103,6 +106,8 @@ export function createDetector(notifyMe: (report:Report) => void, maxDelta: numb
   return function() {
     asyncHook.disable()
     working = false;
+    if (timeout != null) clearTimeout(timeout)
+    resetProfiler()
   }
 }
 
