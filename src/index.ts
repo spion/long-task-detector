@@ -58,9 +58,9 @@ export function createDetector(notifyMe: (report:Report) => void, maxDelta: numb
       prof.delete()
     }
     if (working) {
-      lastStart = Date.now()
       profiler.startProfiling('long-task-detector')
-      timeout = setTimeout(resetProfiler, 3000)
+      t = lastStart = Date.now()
+      timeout = setTimeout(resetProfiler, 5000)
     }
   }
   resetProfiler()
