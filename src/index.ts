@@ -43,9 +43,9 @@ export function createDetector(notifyMe: (report:Report) => void, maxDelta: numb
       }
       notifyMe(warning)
       stuck.delete()
-      lastStart = Date.now()
       profiler.startProfiling('long-task-detector')
 
+      t = lastStart = Date.now()
     }
   }
 
