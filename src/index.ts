@@ -1,4 +1,4 @@
-import * as asyncHook from 'async-hook'
+import * as asyncHooks from 'async_hooks'
 import * as profiler from 'v8-profiler'
 
 export interface Report {
@@ -16,7 +16,7 @@ export interface StackItem {
   line: number;
   url: string;
 }
-
+var asyncHook: asyncHooks.AsyncHook = null;
 export function createDetector(notifyMe: (report:Report) => void, maxDelta: number) {
   var t = Date.now();
   var lastStart:number = null;
@@ -49,7 +49,12 @@ export function createDetector(notifyMe: (report:Report) => void, maxDelta: numb
     }
   }
 
-  asyncHook.addHooks({pre:pre, post:post})
+  asyncHook = asyncHook || asyncHooks.createHook({
+    init() {},
+    before: pre,
+    after: post,
+    destroy() {}
+  })
   asyncHook.enable()
   var currentProfile = null
   function resetProfiler() {
@@ -104,7 +109,10 @@ export function createDetector(notifyMe: (report:Report) => void, maxDelta: numb
   }
 
   return function() {
-    asyncHook.disable()
+    if (asyncHook) {
+      asyncHook.disable()
+      asyncHook = null
+    }
     working = false;
     if (timeout != null) clearTimeout(timeout)
     resetProfiler()
