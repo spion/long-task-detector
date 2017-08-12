@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "async-hook": "^1.6.2",
+    "@types/node": "^8.0.0",
     "v8-profiler": "^5.6.5"
   },
   "devDependencies": {
